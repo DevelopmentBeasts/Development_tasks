@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This is the game configuration xml-->
+
+
+<configuration>
+  <name>WTF IS GOING ON ESPAÑITA EL VIDEOJUEGO</name>
+  <sound>
+    <sfx>
+    </sfx>
+    <music>
+    </music>
+  </sound>
+  <screen>
+    <screen_size>
+    </screen_size>
+    <screen_type>
+    </screen_type>
+  </screen>
+</configuration>

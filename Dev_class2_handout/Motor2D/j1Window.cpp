@@ -73,6 +73,9 @@ bool j1Window::Awake()
 			// TODO 4: Read the title of the app from the XML
 			// and set directly the window title using SetTitle()
 
+			SetTitle(App->node_xml.first_child().child_value());  //wtf why without the "name" is working and with the "name" no.
+
+			
 		}
 	}
 

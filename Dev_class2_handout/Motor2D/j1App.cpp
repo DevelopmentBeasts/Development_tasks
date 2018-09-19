@@ -60,7 +60,9 @@ bool j1App::Awake()
 	// TODO 3: Load config.xml file using load_file() method from the xml_document class.
 	// If everything goes well, load the top tag inside the xml_node property
 	// created in the last TODO
-	pugi::xml_parse_result LoadStuff = config.load_file("xml_docs/Configuration.xml");
+	bool ret = true;
+
+	pugi::xml_parse_result LoadStuff = doc.load_file("xml_docs/Configuration.xml");
 	if (LoadStuff) {
 		LOG("configuration.xml loaded correctly.");
 	}
@@ -69,7 +71,9 @@ bool j1App::Awake()
 		LOG(LoadStuff.description());
 		return false;
 	}
-	bool ret = true;
+
+	node_xml = doc.first_child();
+	
 
 	p2List_item<j1Module*>* item;
 	item = modules.start;

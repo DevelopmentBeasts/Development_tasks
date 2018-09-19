@@ -85,9 +85,9 @@ private:
 	// a xml_document to store the while config file and
 	// a xml_node to read specific branches of the xml
 	/*struct xml_document_struct */
-
-	pugi::xml_document config;
-	pugi::xml_node readxml;
+public:
+	pugi::xml_document doc;
+	pugi::xml_node node_xml;
 
 	int					argc;
 	char**				args;
