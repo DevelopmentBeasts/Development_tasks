@@ -153,6 +153,18 @@ void j1App::FinishUpdate()
 {
 	// TODO 1: This is a good place to call load / Save functions
 
+	if (must_save)
+		real_save();
+
+	if (load_save)
+		real_load();
+		
+	/*if (App->input->GetKey(SDL_SCANCODE_S)== j1KeyState::KEY_DOWN)
+		Save();
+
+	if (App->input->GetKey(SDL_SCANCODE_L) == j1KeyState::KEY_DOWN)
+		Load();*/
+
 }
 
 // Call modules before each loop iteration
@@ -263,7 +275,13 @@ const char* j1App::GetOrganization() const
 	return organization.GetString();
 }
 
+void j1App::Save(){
+	must_save = true;
+}
 
+void j1App::Load() {
+	must_load = true;
+}
 // TODO 4: Create a simulation of the xml file to read 
 
 // TODO 5: Create a method to actually load an xml file
