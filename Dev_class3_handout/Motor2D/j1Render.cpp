@@ -89,6 +89,12 @@ bool j1Render::CleanUp()
 
 // TODO 6: Create a method to load the state
 // for now it will be camera's x and y
+bool j1Render::Load() {
+	bool ret = true;
+	camera.x = App->renderer_node.child("camera").attribute("x").as_int();
+	camera.y = App->renderer_node.child("camera").attribute("y").as_int();
+	return ret;
+}
 
 // TODO 8: Create a method to save the state of the renderer
 // using append_child and append_attribute

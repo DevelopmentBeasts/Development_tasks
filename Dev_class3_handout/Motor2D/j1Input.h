@@ -50,6 +50,9 @@ public:
 	// Gather relevant win events
 	bool GetWindowEvent(j1EventWindow ev);
 
+	
+
+
 	// Check key states (includes mouse and joy buttons)
 	j1KeyState GetKey(int id) const
 	{

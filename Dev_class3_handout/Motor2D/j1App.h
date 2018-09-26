@@ -48,14 +48,18 @@ public:
 	// that can be called anytime, even if they 
 	// will one execute by the very end of the frame
 	// Load / Save
-	void Save();
-	void Load();
+	void save();
+	void load();
+
+	bool Real_Save();
+	bool Real_Load();
 
 private:
 
 	// Load config file
 	bool LoadConfig();
-
+	bool LoadxmlFile(pugi::xml_document &file, char *file_name);
+	
 	// Call modules before each loop iteration
 	void PrepareUpdate();
 
@@ -80,23 +84,34 @@ public:
 	j1Textures*			tex;
 	j1Audio*			audio;
 	j1Scene*			scene;
+public:
+
+	pugi::xml_node      renderer_node;
+
 
 private:
 
 	p2List<j1Module*>	modules;
 	uint				frames;
 	float				dt;
+
 	pugi::xml_document	config_file;
+	pugi::xml_document  Save_file;
+
 	pugi::xml_node		config;
 	pugi::xml_node		app_config;
+	
+	pugi::xml_node      save_node;
+
+
 	int					argc;
 	char**				args;
 
 	p2SString			title;
 	p2SString			organization;
 
-	bool must_save = false;
-	bool must_load = false;
+	 bool must_save = false;
+	 bool must_load = false;
 
 };
 

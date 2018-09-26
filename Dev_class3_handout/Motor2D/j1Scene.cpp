@@ -57,6 +57,14 @@ bool j1Scene::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x += 1;
 
+	//MY OWN CODE HERE
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == j1KeyState::KEY_DOWN)
+		App->save();
+
+	if (App->input->GetKey(SDL_SCANCODE_L) == j1KeyState::KEY_DOWN)
+		App->load();
+
 	App->render->Blit(img, 0, 0);
 	return true;
 }

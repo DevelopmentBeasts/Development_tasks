@@ -8,6 +8,7 @@
 	
   <renderer>
     <vsync value="false"/>
+    <camera x="0" y =" 0" />
   </renderer>
 
   <window>
@@ -18,4 +19,7 @@
     <fullscreen_window value="false"/>
   </window>
 
+  
+  
+  
 </config>

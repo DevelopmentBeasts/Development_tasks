@@ -117,6 +117,10 @@ bool j1App::Update()
 	if(ret == true)
 		ret = PostUpdate();
 
+	
+
+
+
 	FinishUpdate();
 	return ret;
 }
@@ -125,8 +129,10 @@ bool j1App::Update()
 // ---------------------------------------------
 bool j1App::LoadConfig()
 {
+
 	bool ret = true;
 
+	//general config
 	pugi::xml_parse_result result = config_file.load_file("config.xml");
 
 	if(result == NULL)
@@ -153,18 +159,15 @@ void j1App::FinishUpdate()
 {
 	// TODO 1: This is a good place to call load / Save functions
 
-	if (must_save)
-		real_save();
-
-	if (load_save)
-		real_load();
-		
-	/*if (App->input->GetKey(SDL_SCANCODE_S)== j1KeyState::KEY_DOWN)
-		Save();
-
-	if (App->input->GetKey(SDL_SCANCODE_L) == j1KeyState::KEY_DOWN)
-		Load();*/
-
+	if (must_save) {
+		Real_Save();
+		must_save = false;
+	}
+	if (must_load) {
+		Real_Load();
+		must_load = false;
+	}
+	
 }
 
 // Call modules before each loop iteration
@@ -275,14 +278,69 @@ const char* j1App::GetOrganization() const
 	return organization.GetString();
 }
 
-void j1App::Save(){
+void j1App::save(){
 	must_save = true;
 }
 
-void j1App::Load() {
+void j1App::load() {
 	must_load = true;
 }
+
+bool j1App::Real_Load() {
+
+	bool ret = true;
+
+	pugi::xml_parse_result result = Save_file.load_file("Camera.xml");
+
+	if (result == NULL) {
+		LOG("Could not load  xml file camera.xml pugi error: %s", result.description());
+		ret = false;
+	}
+	else {
+		save_node = Save_file.child("save");
+		renderer_node = save_node.child("renderer");
+
+
+		p2List_item<j1Module*>* item;
+		j1Module* pModule = NULL;
+		item = modules.start;
+		for (item ; item != NULL; item = item->next)
+		{
+			pModule = item->data;
+
+			pModule->Load();
+		}
+	}
+
+
+	
+	/*App->render->Loading_action(camera_file);*/
+
+	return ret;
+}
+bool j1App::Real_Save() {
+	//stuff to save things
+	return true;
+}
+
+bool j1App::LoadxmlFile(pugi::xml_document &file,char* file_name) {
+
+	bool ret = true;
+
+	pugi::xml_parse_result result = file.load_file(file_name);
+
+	if (result == NULL)
+	{
+		LOG("Could not load xml file %c pugi error: %s", file_name, result.description());
+		ret = false;
+	}
+	
+	return ret;
+}
+
 // TODO 4: Create a simulation of the xml file to read 
+
+
 
 // TODO 5: Create a method to actually load an xml file
 // then call all the modules to load themselves

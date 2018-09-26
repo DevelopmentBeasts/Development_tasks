@@ -88,7 +88,7 @@ private:
 public:
 	pugi::xml_document doc;
 	pugi::xml_node node_xml;
-
+	
 	int					argc;
 	char**				args;
 };

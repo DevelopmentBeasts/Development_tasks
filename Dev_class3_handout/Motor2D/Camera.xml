@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<save>
+  <input/>
+  <window/>
+  <textures/>
+  <audio/>
+  <scene/>
+  <renderer>
+    <camera y="510" x="332"/>
+  </renderer>
+</save>
