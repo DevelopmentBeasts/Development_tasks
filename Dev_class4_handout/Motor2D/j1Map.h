@@ -58,11 +58,11 @@ public:
 	// Load new map
 	bool Load(const char* path);
 
-	bool LoadTileMap
+	
 
 private:
-
-
+	bool LoadTileMap(MapInfo &mapinfo, TileSetInfo &tilesetinfo);
+	pugi::xml_document MapInfos;
 public:
 
 	// TODO 1: Add your struct for map info as public for now

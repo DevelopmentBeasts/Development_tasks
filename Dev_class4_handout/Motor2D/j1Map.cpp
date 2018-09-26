@@ -86,3 +86,11 @@ bool j1Map::Load(const char* file_name)
 	return ret;
 }
 
+bool j1Map::LoadTileMap(MapInfo &mapinfo, TileSetInfo &tilesetinfo) {
+	bool ret = false;
+	
+
+	return ret;
+}
+
+
