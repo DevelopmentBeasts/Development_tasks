@@ -58,30 +58,60 @@ bool j1Map::Load(const char* file_name)
 
 	pugi::xml_parse_result result = map_file.load_file(tmp.GetString());
 
-	if(result == NULL)
+	if (result == NULL)
 	{
 		LOG("Could not load map xml file %s. pugi error: %s", file_name, result.description());
 		ret = false;
 	}
 
-	if(ret == true)
+	if (ret == true)
 	{
 		// TODO 3: Create and call a private function to load and fill
 		// all your map data
-	}
+		
+		pugi::xml_node mapnode = map_file.child("map");
+
+		LoadMap(mapnode, mapstuffvar);
 
 	// TODO 4: Create and call a private function to load a tileset
 	// remember to support more any number of tilesets!
-	
 
-	if(ret == true)
-	{
-		// TODO 5: LOG all the data loaded
-		// iterate all tilesets and LOG everything
+
+
+		if (ret == true)
+		{
+			// TODO 5: LOG all the data loaded
+			// iterate all tilesets and LOG everything
+		}
+
+		map_loaded = ret;
+
+		return ret;
 	}
+}
+bool j1Map::LoadMap(pugi::xml_node Mapnode, MapStuff &mapstuff){
 
-	map_loaded = ret;
+	bool ret = true;
 
+	mapstuff.height = Mapnode.attribute("height").as_uint();
+	mapstuff.width = Mapnode.attribute("width").as_uint();
+	mapstuff.titleheight = Mapnode.attribute("tileheight").as_uint();
+	mapstuff.titlewidth = Mapnode.attribute("titlewidth").as_uint();
+	//HERE GOES THE RENDERORDER AND THE ORIENTATION WHICH THEY ARE...? STRINGS? XD
+
+	/*
+	pugi::xml_document doc;
+	pugi::xml_node node;
+	p2SString tmp("%s%s", folder.GetString(), filename);
+	pugi::xml_parse_result result = doc.load_file(tmp.GetString());
+	if (result == NULL) {
+		ret = false;
+		LOG("the file from the function -LoadAndFill- can not be found, check the");
+	}
+	else {
+		node = doc.child("map");	
+		mapinfo.width = node.child_value("width").as_int();	
+	}*/
 	return ret;
 }
 
