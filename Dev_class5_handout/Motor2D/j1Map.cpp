@@ -31,7 +31,40 @@ void j1Map::Draw()
 	if(map_loaded == false)
 		return;
 
-	// TODO 5: Prepare the loop to draw all tilesets + Blit
+	MapLayer *layer = mapinfo.Layers.start->data;
+	TileSet*tileset = mapinfo.tilesets.start->data;
+	
+	
+
+	SDL_Rect e = tileset->GetTileRect(20);
+	SDL_Rect ATile;
+	bool ret = true;
+
+	for (int y = 0; y < layer->Height; ++y) {
+		for (int x = 0; x < layer->Witdh; ++x) {
+
+			uint gid = layer->CoreData[(y*layer->Witdh)+x];
+			SDL_Rect rect = tileset->GetTileRect(gid);
+			App->render->Blit(tileset->texture, x*tileset->tile_width, y*tileset->tile_height, &rect);
+		}
+	}
+	
+
+
+
+	/*for (int i = 0; ret;++i) {
+
+		ATile = tileset->GetTileRect(i);
+		if ( == nullptr) {
+			ret = false;
+		}
+	}*/
+
+
+
+
+
+
 
 		// TODO 9: Complete the draw function
 
@@ -42,8 +75,8 @@ iPoint j1Map::MapToWorld(int x, int y) const
 {
 	iPoint ret;
 
-	ret.x = x * data.tile_width;
-	ret.y = y * data.tile_height;
+	ret.x = x * mapinfo.tile_width;
+	ret.y = y * mapinfo.tile_height;
 
 	return ret;
 }
@@ -66,17 +99,27 @@ bool j1Map::CleanUp()
 
 	// Remove all tilesets
 	p2List_item<TileSet*>* item;
-	item = data.tilesets.start;
+	item = mapinfo.tilesets.start;
 
 	while(item != NULL)
 	{
 		RELEASE(item->data);
 		item = item->next;
 	}
-	data.tilesets.clear();
+	mapinfo.tilesets.clear();
 
 	// TODO 2: clean up all layer data
 	// Remove all layers
+
+	p2List_item<MapLayer*>* item_Layer;
+	item_Layer = mapinfo.Layers.start;
+
+	while (item != NULL)
+	{
+		RELEASE(item_Layer->data);
+		item_Layer = item_Layer->next;
+	}
+	mapinfo.tilesets.clear();
 
 
 	// Clean up the pugui tree
@@ -121,20 +164,32 @@ bool j1Map::Load(const char* file_name)
 			ret = LoadTilesetImage(tileset, set);
 		}
 
-		data.tilesets.add(set);
+		mapinfo.tilesets.add(set);
 	}
 
 	// TODO 4: Iterate all layers and load each of them
 	// Load layer info ----------------------------------------------
 
+	pugi::xml_node LayerNode;
+
+
+
+	for (LayerNode = map_file.child("layer"); LayerNode && ret; LayerNode=LayerNode.next_sibling("layer")) {
+
+	MapLayer*layer_ = new MapLayer();
+
+	LoadLayer(LayerNode, layer_);
+		
+	}
+
 
 	if(ret == true)
 	{
 		LOG("Successfully parsed map XML file: %s", file_name);
-		LOG("width: %d height: %d", data.width, data.height);
-		LOG("tile_width: %d tile_height: %d", data.tile_width, data.tile_height);
+		LOG("width: %d height: %d", mapinfo.width, mapinfo.height);
+		LOG("tile_width: %d tile_height: %d", mapinfo.tile_width, mapinfo.tile_height);
 
-		p2List_item<TileSet*>* item = data.tilesets.start;
+		p2List_item<TileSet*>* item = mapinfo.tilesets.start;
 		while(item != NULL)
 		{
 			TileSet* s = item->data;
@@ -147,16 +202,16 @@ bool j1Map::Load(const char* file_name)
 
 		// TODO 4: Add info here about your loaded layers
 		// Adapt this vcode with your own variables
-		/*
-		p2List_item<MapLayer*>* item_layer = data.layers.start;
+		
+		p2List_item<MapLayer*>* item_layer = mapinfo.Layers.start;
 		while(item_layer != NULL)
 		{
 			MapLayer* l = item_layer->data;
 			LOG("Layer ----");
 			LOG("name: %s", l->name.GetString());
-			LOG("tile width: %d tile height: %d", l->width, l->height);
+			LOG("tile width: %d tile height: %d", l->Witdh, l->Height);
 			item_layer = item_layer->next;
-		}*/
+		}
 	}
 
 	map_loaded = ret;
@@ -177,16 +232,16 @@ bool j1Map::LoadMap()
 	}
 	else
 	{
-		data.width = map.attribute("width").as_int();
-		data.height = map.attribute("height").as_int();
-		data.tile_width = map.attribute("tilewidth").as_int();
-		data.tile_height = map.attribute("tileheight").as_int();
+		mapinfo.width = map.attribute("width").as_int();
+		mapinfo.height = map.attribute("height").as_int();
+		mapinfo.tile_width = map.attribute("tilewidth").as_int();
+		mapinfo.tile_height = map.attribute("tileheight").as_int();
 		p2SString bg_color(map.attribute("backgroundcolor").as_string());
 
-		data.background_color.r = 0;
-		data.background_color.g = 0;
-		data.background_color.b = 0;
-		data.background_color.a = 0;
+		mapinfo.background_color.r = 0;
+		mapinfo.background_color.g = 0;
+		mapinfo.background_color.b = 0;
+		mapinfo.background_color.a = 0;
 
 		if(bg_color.Length() > 0)
 		{
@@ -198,32 +253,32 @@ bool j1Map::LoadMap()
 			int v = 0;
 
 			sscanf_s(red.GetString(), "%x", &v);
-			if(v >= 0 && v <= 255) data.background_color.r = v;
+			if(v >= 0 && v <= 255) mapinfo.background_color.r = v;
 
 			sscanf_s(green.GetString(), "%x", &v);
-			if(v >= 0 && v <= 255) data.background_color.g = v;
+			if(v >= 0 && v <= 255) mapinfo.background_color.g = v;
 
 			sscanf_s(blue.GetString(), "%x", &v);
-			if(v >= 0 && v <= 255) data.background_color.b = v;
+			if(v >= 0 && v <= 255) mapinfo.background_color.b = v;
 		}
 
 		p2SString orientation(map.attribute("orientation").as_string());
 
 		if(orientation == "orthogonal")
 		{
-			data.type = MAPTYPE_ORTHOGONAL;
+			mapinfo.type = MAPTYPE_ORTHOGONAL;
 		}
 		else if(orientation == "isometric")
 		{
-			data.type = MAPTYPE_ISOMETRIC;
+			mapinfo.type = MAPTYPE_ISOMETRIC;
 		}
 		else if(orientation == "staggered")
 		{
-			data.type = MAPTYPE_STAGGERED;
+			mapinfo.type = MAPTYPE_STAGGERED;
 		}
 		else
 		{
-			data.type = MAPTYPE_UNKNOWN;
+			mapinfo.type = MAPTYPE_UNKNOWN;
 		}
 	}
 
@@ -292,6 +347,24 @@ bool j1Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 }
 
 // TODO 3: Create the definition for a function that loads a single layer
-//bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
-//{
-//}
+bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
+{
+	
+	layer->Height = node.attribute("height").as_uint();
+	layer->Witdh = node.attribute("width").as_uint();
+	layer->name = node.attribute("name").as_string();
+
+	layer->CoreData = new unsigned int[layer->Witdh*layer->Height];
+	
+	memset(layer->CoreData,0u,(layer->Witdh*layer->Height));
+	
+	for (uint i = 0; i < (layer->Witdh*layer->Height);++i) {
+
+		layer->CoreData[i] = node.attribute("tile").as_uint();
+		node=node.next_sibling("tile");
+	}
+
+	
+
+	return true;
+}
