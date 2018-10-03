@@ -8,26 +8,6 @@
 
 // TODO 1: Create a struct for the map layer
 // ----------------------------------------------------
-struct MapLayer {
-
-	p2SString name;
-	unsigned int Witdh,Height;
-	unsigned int* CoreData;
-
-	~MapLayer(){
-
-		if (CoreData != nullptr)
-			delete CoreData;
-	}
-
-	inline uint Get(uint x, uint y) const
-	{
-		return x + y * Witdh;
-	}
-
-};
-
-
 
 	// TODO 6: Short function to get the value of x,y
 
@@ -72,7 +52,6 @@ struct MapData
 	MapTypes			type;
 	p2List<TileSet*>	tilesets;
 	// TODO 2: Add a list/array of layers to the map!
-	p2List<MapLayer*> Layers;
 };
 
 // ----------------------------------------------------
@@ -106,11 +85,11 @@ private:
 	bool LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set);
 	bool LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set);
 	// TODO 3: Create a method that loads a single laye
-	 bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
+	// bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
 
 public:
 
-	MapData mapinfo;
+	MapData data;
 
 private:
 
