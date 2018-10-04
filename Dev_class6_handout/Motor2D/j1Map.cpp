@@ -38,22 +38,37 @@ void j1Map::Draw()
 	// TODO 10(old): Complete the draw function
 }
 
-iPoint j1Map::MapToWorld(int x, int y) const
+iPoint j1Map::MapToWorld(int mapx, int mapy) const //map = coords
 {
 	iPoint ret(0,0);
 	// TODO 8(old): Create a method that translates x,y coordinates from map positions to world positions
 
 	// TODO 1: Add isometric map to world coordinates
+	if (data.type == MAPTYPE_ISOMETRIC) {
+		ret.x = mapx * data.tile_width;
+		ret.y = mapy * data.tile_height;
+	}
+	else if (data.type == MAPTYPE_ORTHOGONAL) {
+		ret.x = (data.width* (data.tile_width / 2)) - (data.height*(data.tile_width / 2));
+		ret.y = (data.height* (data.tile_height / 2)) - (data.height*(data.tile_height / 2));	
+	}
 	return ret;
 }
 
 
-iPoint j1Map::WorldToMap(int x, int y) const
+iPoint j1Map::WorldToMap(int worldx, int worldy) const //world = pixels
 {
 	iPoint ret(0,0);
 	// TODO 2: Add orthographic world to map coordinates
-
 	// TODO 3: Add the case for isometric maps to WorldToMap
+	if (data.type == MAPTYPE_ISOMETRIC) {
+		ret.x = ((worldx * 2) / data.tile_width);
+		ret.y = ((worldy * 2) / data.tile_height);
+	}
+	else if (data.type == MAPTYPE_ORTHOGONAL) {
+		ret.y = (worldy / data.tile_height / 2);
+		ret.x = (worldx - (ret.y*(data.tile_width / 2)) / (data.tile_width / 2));
+	}
 	return ret;
 }
 
