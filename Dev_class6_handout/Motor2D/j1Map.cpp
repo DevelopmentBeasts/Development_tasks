@@ -32,42 +32,66 @@ void j1Map::Draw()
 		return;
 
 	// TODO 5(old): Prepare the loop to draw all tilesets + Blit
-	MapLayer* layer = data.layers.start->data; // for now we just use the first layer and tileset
-	TileSet* tileset = data.tilesets.start->data;
+	p2List_item<MapLayer*>* layer; //Map 1 layer
+	layer = data.layers.start;
 
-	// TODO 10(old): Complete the draw function
+	p2List_item<TileSet*>* item; //Sprites_Layer
+
+	while (layer != nullptr) {
+		item = data.tilesets.start;
+		while (item != nullptr) {
+			for (int y = 0; y < data.height; ++y) {
+				for (int x = 0; x < data.width; ++x) {
+					uint id = layer->data->Get(x, y);
+
+					id = layer->data->data[id];
+
+					if (id != 0) {
+						SDL_Rect *rect = &item->data->GetTileRect(id);
+						iPoint pos = MapToWorld(x, y);
+						App->render->Blit(item->data->texture, pos.x, pos.y, rect);
+					}
+				}
+			}; 
+			item = item->next;
+		}
+		layer = layer->next;
+	}
 }
 
-iPoint j1Map::MapToWorld(int mapx, int mapy) const //map = coords
+	// TODO 10(old): Complete the draw function
+
+
+iPoint j1Map::MapToWorld(int x, int y) const //map = coords
 {
 	iPoint ret(0,0);
 	// TODO 8(old): Create a method that translates x,y coordinates from map positions to world positions
 
 	// TODO 1: Add isometric map to world coordinates
 	if (data.type == MAPTYPE_ISOMETRIC) {
-		ret.x = mapx * data.tile_width;
-		ret.y = mapy * data.tile_height;
+		ret.x = (data.tile_width / 2)*(x - y);
+		ret.y = (data.tile_height / 2)*(x + y);
 	}
 	else if (data.type == MAPTYPE_ORTHOGONAL) {
-		ret.x = (data.width* (data.tile_width / 2)) - (data.height*(data.tile_width / 2));
-		ret.y = (data.height* (data.tile_height / 2)) - (data.height*(data.tile_height / 2));	
+		ret.x = x * data.tile_width;
+		ret.y = y * data.tile_height;
 	}
 	return ret;
 }
 
 
-iPoint j1Map::WorldToMap(int worldx, int worldy) const //world = pixels
+iPoint j1Map::WorldToMap(int x, int y) const //world = pixels
 {
 	iPoint ret(0,0);
 	// TODO 2: Add orthographic world to map coordinates
 	// TODO 3: Add the case for isometric maps to WorldToMap
 	if (data.type == MAPTYPE_ISOMETRIC) {
-		ret.x = ((worldx * 2) / data.tile_width);
-		ret.y = ((worldy * 2) / data.tile_height);
+		//missing
 	}
 	else if (data.type == MAPTYPE_ORTHOGONAL) {
-		ret.y = (worldy / data.tile_height / 2);
-		ret.x = (worldx - (ret.y*(data.tile_width / 2)) / (data.tile_width / 2));
+		ret.x = x / data.tile_width;
+		ret.y = y / data.tile_height;
+
 	}
 	return ret;
 }
