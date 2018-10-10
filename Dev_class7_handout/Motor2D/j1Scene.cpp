@@ -30,7 +30,7 @@ bool j1Scene::Awake()
 // Called before the first frame
 bool j1Scene::Start()
 {
-	App->map->Load("iso_walk.tmx");
+	App->map->Load("AEGIS_MAP.tmx");
 	
 	return true;
 }
@@ -51,16 +51,16 @@ bool j1Scene::Update(float dt)
 		App->SaveGame("save_game.xml");
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		App->render->camera.y += 1;
+		App->render->camera.y += 2;
 
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		App->render->camera.y -= 1;
+		App->render->camera.y -= 2;
 
 	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		App->render->camera.x += 1;
+		App->render->camera.x += 2;
 
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		App->render->camera.x -= 1;
+		App->render->camera.x -= 2;
 
 	App->map->Draw();
 
