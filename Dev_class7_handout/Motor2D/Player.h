@@ -5,6 +5,11 @@
 #include "p2List.h"
 #include "p2Point.h"
 #include "j1Module.h"
+#include "Animation.h"
+
+
+struct SDL_Texture;
+
 
 enum PlayerTypes {
 	FIRE_WISP = 0,
@@ -39,7 +44,9 @@ public:
 
 	//bool CleanUp();
 
-	bool Load(const char* path);
+	// Load / Save
+	//bool Load(pugi::xml_node&);
+	//bool Save(pugi::xml_node&) const;
 
 	iPoint MapToWorld(int x, int y) const;
 	iPoint WorldToMap(int x, int y) const;
@@ -67,7 +74,7 @@ private:
 	bool				map_loaded;
 
 public:
-	SDL_Rect rect;
+	SDL_Rect player;
 	SDL_Rect StaminaRect;
 public:
 	bool jumping = false;
@@ -80,6 +87,23 @@ public:
 	bool automatic_right = false;
 	bool automatic_left = false;
 	bool fall_atack = false;
+public:
+
+
+	SDL_Texture* Textures = nullptr;
+	Animation* current_animation = nullptr;
+
+	Animation idle_right;
+	Animation idle_left;
+	Animation run_right;
+	Animation run_left;
+	Animation jump_right;
+	Animation jump_left;
+	Animation fall_right;
+	Animation fall_left;
+	Animation attack_right;
+	Animation attack_left;
+	
 };
 
 #endif
