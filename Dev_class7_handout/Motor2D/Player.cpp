@@ -15,67 +15,18 @@ PlayerClass::~PlayerClass() {
 }
 PlayerClass::PlayerClass() {   //DO PUSHBACKS WITH XML
 	this->name = 'a';
-	current_animation = NULL;
 
-	// Idle animations
-	idle_left.PushBack({ 19, 7 ,45-19, 37-7 });  
-	idle_left.PushBack({ 81, 9, 26, 27 });
-	idle_left.PushBack({ 143, 7 , 26, 29 });    //DONE
-	idle_left.PushBack({ 206, 7, 23, 28 });
+	pugi::xml_parse_result result = AnimsDoc.load_file("PlayerAnims.xml");
+
+	if (result == NULL) {
+		LOG("The xml file that contains the pushbacks for the animations is not working.PlayerAnims.xml. error: %s",result.description());
+	}
 	
-	idle_left.loop = true;
-	idle_left.speed = 0.12f;
+	AnimsNode = AnimsDoc.child("config").child("AnimsCoords").child("idle_left");
+	LoadPushbacks(AnimsNode, idle_left);
+	AnimsNode = AnimsDoc.child("config").child("AnimsCoords").child("run_left");
+	LoadPushbacks(AnimsNode, run_left);
 
-	
-
-	// Runnig animations
-	
-
-	run_left.PushBack({ 271, 15 , 27, 23 });
-	run_left.PushBack({ 23, 57, 27, 23 });
-	run_left.PushBack({ 85, 57, 29, 24 });  //DONE
-	run_left.PushBack({ 146, 57, 31, 23 });
-	
-	run_left.loop = true;
-	run_left.speed = 0.12f;
-
-	// Jump animations
-	jump_right.PushBack({ 2, 158, 20, 25 });
-	jump_right.PushBack({ 34, 158, 20, 25 });
-	jump_right.loop = true;
-	jump_right.speed = 0.25f;
-
-	fall_right.PushBack({ 87, 157, 22, 26 });
-	fall_right.PushBack({ 119, 157, 22, 26 });
-	fall_right.loop = true;
-	fall_right.speed = 0.25f;
-
-	jump_left.PushBack({ 272, 158, 20, 25 });
-	jump_left.PushBack({ 240, 158, 20, 25 });
-	jump_left.loop = true;
-	jump_left.speed = 0.25f;
-
-	fall_left.PushBack({ 185, 157, 22, 26 });
-	fall_left.PushBack({ 153, 157, 22, 26 });
-	fall_left.loop = true;
-	fall_left.speed = 0.25f;
-
-	// Attack animations
-	attack_right.PushBack({ 1, 272, 29, 27 });
-	attack_right.PushBack({ 64, 272, 29, 27 });
-	attack_right.PushBack({ 135, 272, 35, 27 });
-	attack_right.PushBack({ 198, 272, 40, 27 });
-	attack_right.PushBack({ 253, 272, 42, 27 });
-	attack_right.loop = false;
-	attack_right.speed = 0.25f;
-
-	attack_right.PushBack({ 269, 244, 29, 27 });
-	attack_right.PushBack({ 206, 244, 29, 27 });
-	attack_right.PushBack({ 129, 244, 35, 27 });
-	attack_right.PushBack({ 61, 244, 40, 27 });
-	attack_right.PushBack({ 5, 244, 42, 27 });
-	attack_left.loop = false;
-	attack_left.speed = 0.25f;
 }
 bool PlayerClass::Start() {
 	
@@ -83,7 +34,7 @@ bool PlayerClass::Start() {
 	pugi::xml_parse_result result = PlayerStartFile.load_file("StartPlayerConfig.xml");
 	if (result == NULL) {
 		LOG("Could not load StartPlayerConfig.xml. pugi error: %s", result.description());
-		//ret = false;
+		ret = false;
 	}
 	if (ret == true) {
 		//Load all Player starter info
@@ -122,13 +73,13 @@ bool PlayerClass::Start() {
 	StaminaRect.y = PlayerXmlNode.child("StaminaRect").attribute("y").as_int();
 	//___________________________________________________________________________
 	LOG("Resseting anims");
-	idle_right.Reset();
+	
 	idle_left.Reset();
-	run_right.Reset();
 	run_left.Reset();
+
 	jump_right.Reset();
 	jump_left.Reset();
-	fall_right.Reset();
+	
 	fall_left.Reset();
 	attack_right.Reset();
 	attack_left.Reset();
@@ -136,8 +87,8 @@ bool PlayerClass::Start() {
 	LOG("LOADING PLAYER TEXTURES");
 
 	Textures = App->tex->Load("textures/Fire_Wisp/fireSheet.png");
-	
-	current_animation = &idle_right;
+	current_animation = &idle_left;
+
 	return ret;
 }
 
@@ -434,7 +385,22 @@ void PlayerClass::PlayerAnims() {
 
 
 
-	//App->render->DrawQuad(playerrect, 0, 255, 0, 100);
+	App->render->DrawQuad(playerrect, 0, 255, 0, 100);
 
 	App->render->DrawQuad(StaminaRect, 0, 0, 255, 100);
+}
+void PlayerClass::LoadPushbacks(pugi::xml_node node, Animation &anim) {
+
+	anim.loop = node.attribute("loop").as_bool();
+	anim.speed = node.attribute("speed").as_float();
+	SDL_Rect rect;
+	for (node = node.child("PushBack"); node; node = node.next_sibling("PushBack")) {
+		rect.x = node.attribute("x").as_int();
+		rect.y = node.attribute("y").as_int();
+		rect.w = node.attribute("w").as_int();
+		rect.h = node.attribute("h").as_int();
+		anim.PushBack({ rect });
+	}
+	
+	
 }
