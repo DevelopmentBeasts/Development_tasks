@@ -24,7 +24,7 @@ PlayerClass::PlayerClass() {   //DO PUSHBACKS WITH XML
 	idle_left.PushBack({ 206, 7, 23, 28 });
 	
 	idle_left.loop = true;
-	idle_left.speed = 0.2f;
+	idle_left.speed = 0.12f;
 
 	
 
@@ -37,7 +37,7 @@ PlayerClass::PlayerClass() {   //DO PUSHBACKS WITH XML
 	run_left.PushBack({ 146, 57, 31, 23 });
 	
 	run_left.loop = true;
-	run_left.speed = 0.2f;
+	run_left.speed = 0.12f;
 
 	// Jump animations
 	jump_right.PushBack({ 2, 158, 20, 25 });
@@ -167,8 +167,10 @@ bool PlayerClass::Update(float dt) {
 
 void PlayerClass::MovePlayer() {
 	
+	//by default you are not moving (usefull bools for anim system)
 	movingleft = false;
 	movingright = false;
+
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		movingleft = false;
 		movingright = true;
@@ -177,15 +179,15 @@ void PlayerClass::MovePlayer() {
 			data.xpos += data.xvel;
 		}
 		if (jumping) {
-			automatic_right = true;
+			automatic_right = true; //automatic left or right is a bool that allows you to stop pressing "D" in the air without stoping the x movement of the character.
 		}
 	}
 	if (automatic_right) {
-		data.xpos += (data.xvel + 1.5);
+		data.xpos += (data.xvel + 1.5); // a little boost of the speed in the air to make the jump more interesting in a plataformer game
 	}
 	//__________________
 	
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) { // the same as "D"
 		movingleft = true;
 		movingright = false;
 		automatic_right = false;
@@ -200,7 +202,7 @@ void PlayerClass::MovePlayer() {
 		data.xpos -= (data.xvel + 1.5);
 	}
 
-	if (data.ypos == yposaux) {
+	if (data.ypos == yposaux) {  //if the y position touches the ground stops the automatic left and right of the jump
 		automatic_right = false;
 		automatic_left = false;
 	}
@@ -208,13 +210,13 @@ void PlayerClass::MovePlayer() {
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 		
-		if (data.yvel > -3 && jumping) {
-			if (StaminaRect.w >= 121) {
-				StaminaRect.w -= 120;
+		if (data.yvel > -3 && jumping) { // if you are in the top of your jump you can press "S" to fall down doing a smash in the ground
+			if (StaminaRect.w >= 121) { 
+				StaminaRect.w -= 120; // the stamina bar have 300p and every time you press "S" in the air you use 120p
 				if (jumping) {
 					fall_atack = true;
 					jumping = false;
-					automatic_left = false;
+					automatic_left = false;  
 					automatic_right = false;
 
 				}
@@ -224,17 +226,17 @@ void PlayerClass::MovePlayer() {
 	//____________________
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 
-		if (jumping == false) {
+		if (jumping == false) { //this is here because we don't want the player to press w in the air and jump again if it is not allowed
 			//data.yvel = 1.0;
 			bot_reached = false;
 			top_reached = false;
 			jumping = true;
-			data.yvel = 10;
+			data.yvel = 10;  //initial y speed
 			yposaux = data.ypos;
 		}
 	}
 	if (jumping) {
-		data.ypos -= data.yvel;
+		data.ypos -= data.yvel; //this makes the y speed decrease and become negative to turn back in the top ending up falling down to the ground
 		data.yvel -= 0.3;
 
 		if (data.ypos >= yposaux) {
@@ -244,11 +246,11 @@ void PlayerClass::MovePlayer() {
 	}
 	if (!jumping) {
 		data.yvel = 0.0;
-		if (StaminaRect.w <= 300) {
+		if (StaminaRect.w <= 300) {  // here the stamina rect grows its points if you don't jump bc you are "in rest"
 			StaminaRect.w += 1;
 		}
 	}
-	if (fall_atack && !jumping) {
+	if (fall_atack && !jumping) { // a big boost of the speed when you want to fall down with a smash to make it more impressive
 		data.yvel = 25.0;
 		data.ypos += data.yvel;
 		data.yvel += 2;
@@ -259,7 +261,7 @@ void PlayerClass::MovePlayer() {
 	}
 	//_____________
 
-	playerrect.x = data.xpos;
+	playerrect.x = data.xpos;  //here we put the SDL_Rect where we print the sprites in the player position.
 	playerrect.y = data.ypos;
 	
 
@@ -294,7 +296,7 @@ void PlayerClass::PlayerAnims() {
 	}
 	
 
-	//LAST DIRECTION RECORD
+	//LAST DIRECTION RECORD (usefull to continue looking the same side when we are idl and we run or jump
 	
 	if (SCANCODE_D == true ) {  //RIGHT 
 		LastDirectionLeft = false;

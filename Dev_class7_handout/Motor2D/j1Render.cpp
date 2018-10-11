@@ -3,7 +3,7 @@
 #include "j1App.h"
 #include "j1Window.h"
 #include "j1Render.h"
-
+#include "player.h"
 #define VSYNC true
 
 j1Render::j1Render() : j1Module()
@@ -69,6 +69,7 @@ bool j1Render::PreUpdate()
 
 bool j1Render::Update(float dt)
 {
+	
 	return true;
 }
 

@@ -32,7 +32,12 @@ bool j1Scene::Awake()
 bool j1Scene::Start()
 {
 	App->map->Load("AEGIS_MAP.tmx");
-	
+	//here we take the initial player pos to make camera do the same movements
+	/*playerinitx = App->player->data.xpos;
+	playerinity = App->player->data.ypos;
+
+	screeninitx = App->render->camera.x;
+	screeninity = App->render->camera.y;*/
 	return true;
 }
 
@@ -45,11 +50,16 @@ bool j1Scene::PreUpdate()
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
+	/*if (App->player->data.xpos != playerinitx) {
+		 App->render->camera.x = (App->player->data.xpos - playerinitx);
+	}
+	*/
 	
-	if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+	
+	if(App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 		App->LoadGame("save_game.xml");
 
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+	if(App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
 		App->SaveGame("save_game.xml");
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -59,10 +69,10 @@ bool j1Scene::Update(float dt)
 		App->render->camera.y -= 2;
 
 	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		App->render->camera.x += 2;
+		App->render->camera.x += 30;
 
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		App->render->camera.x -= 2;
+		App->render->camera.x -= 30;
 
 	App->map->Draw();
 

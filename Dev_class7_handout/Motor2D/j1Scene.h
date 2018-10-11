@@ -33,6 +33,11 @@ public:
 	bool CleanUp();
 
 private:
+public:
+	float playerinitx;
+	float playerinity;
+	float screeninitx;
+	float screeninity;
 };
 
 #endif // __j1SCENE_H__
