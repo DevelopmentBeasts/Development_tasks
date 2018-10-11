@@ -54,6 +54,7 @@ public:
 
 	bool Update(float dt);
 	void MovePlayer();
+	void PlayerAnims();
 private:
 
 	/*bool LoadPlayer();
@@ -87,10 +88,15 @@ public:
 	bool automatic_right = false;
 	bool automatic_left = false;
 	bool fall_atack = false;
+	bool movingright = false;
+	bool movingleft = false;
+	bool activateleftmovement = false;
+	bool activaterightmovement = false;
 public:
 
 
 	SDL_Texture* Textures = nullptr;
+	SDL_Texture* Texturesflipped = nullptr;
 	Animation* current_animation = nullptr;
 
 	Animation idle_right;
@@ -103,7 +109,13 @@ public:
 	Animation fall_left;
 	Animation attack_right;
 	Animation attack_left;
-	
+public:
+	bool SCANCODE_A = false;
+	bool SCANCODE_D = false;
+	bool SCANCODE_W = false;
+	bool SCANCODE_S = false;
+	bool LastDirectionLeft = false;
+	bool LastDirectionRight = false;
 };
 
 #endif
