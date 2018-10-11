@@ -94,36 +94,32 @@ bool PlayerClass::Start() {
 		LOG("PlayerXmlNode is not reading correctly");
 	}
 	//Asigment of the values
-	uint type1 = PlayerXmlNode.attribute("type").as_uint();
-	switch (type1) {
-	case 0:
+	const char* type1 = PlayerXmlNode.attribute("type").as_string();
+	
+	if (type1 == "FIRE_WISP") {
 		data.type = FIRE_WISP;
-	case 1: 
+	}
+	if (type1 == "WATER_WISP") {
 		data.type = WATER_WISP;
-	case 2: 
+	}
+	if (type1 == "ROCK_WISP") {
 		data.type = ROCK_WISP;
-	case 3:
+	}
+	if (type1 == "WISP_WISP") {
 		data.type = WIND_WISP;
 	}
-	/*data.xpos = PlayerXmlNode.attribute("xpos").as_uint();
-	data.ypos = PlayerXmlNode.attribute("ypos").as_uint();*/
-	/*data.yvel = PlayerXmlNode.attribute("yvel").as_uint();*/
-	/*data.xvel = PlayerXmlNode.attribute("xvel").as_uint(1);*/
-	data.xpos = 700;
-	data.ypos = 500;
-	data.yvel = 0.0;
-	data.xvel = 5.0;
+	data.xpos = PlayerXmlNode.attribute("xpos").as_uint();
+	data.ypos = PlayerXmlNode.attribute("ypos").as_uint(); 
+	data.yvel = PlayerXmlNode.attribute("yvel").as_uint(); //player stats
+	data.xvel = PlayerXmlNode.attribute("xvel").as_uint();
 
+	playerrect.w = PlayerXmlNode.child("playerrect").attribute("w").as_int(); //the rect that contains the player in wich we blit()
+	playerrect.h = PlayerXmlNode.child("playerrect").attribute("h").as_int();
 
-	playerrect.w = 60;//rect used for the player
-	playerrect.h = 60;
-
-	
-	StaminaRect.w = 13;
-	StaminaRect.h = 40;
-
-	StaminaRect.x = 30;
-	StaminaRect.y = 700;
+	StaminaRect.w = PlayerXmlNode.child("StaminaRect").attribute("w").as_int();
+	StaminaRect.h = PlayerXmlNode.child("StaminaRect").attribute("h").as_int();
+	StaminaRect.x = PlayerXmlNode.child("StaminaRect").attribute("x").as_int(); //info of the stamina rect
+	StaminaRect.y = PlayerXmlNode.child("StaminaRect").attribute("y").as_int();
 	//___________________________________________________________________________
 	LOG("Resseting anims");
 	idle_right.Reset();
