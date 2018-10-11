@@ -75,8 +75,9 @@ private:
 	bool				map_loaded;
 
 public:
-	SDL_Rect player;
+	SDL_Rect playerrect;
 	SDL_Rect StaminaRect;
+	SDL_Rect CurrentAnimationRect;
 public:
 	bool jumping = false;
 	bool bot_reached = false;
