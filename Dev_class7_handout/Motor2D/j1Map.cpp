@@ -422,7 +422,7 @@ bool j1Map::LoadColliders(pugi::xml_node& node, ColliderData* collider) {
 	bool ret = true;
 	pugi::xml_node& colliders = node.child("object");
 
-	if (collider == NULL) {
+	if (collider == NULL) { //MILLOR NULLPTR=?
 		LOG("Error parsing map xml file: Cannot find 'colliders' tag.");
 		ret = false;
 		RELEASE(collider);
