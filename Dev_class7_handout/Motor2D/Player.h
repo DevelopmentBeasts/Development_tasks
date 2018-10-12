@@ -75,6 +75,7 @@ private:
 
 	pugi::xml_document	PlayerStartFile;
 	pugi::xml_document AnimsDoc;
+	
 	pugi::xml_node AnimsNode;
 	pugi::xml_node PlayerXmlNode;
 	p2SString			folder;
