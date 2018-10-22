@@ -22,6 +22,7 @@ bool j1Map::Awake(pugi::xml_node& config)
 	bool ret = true;
 
 	folder.create(config.child("folder").child_value());
+	
 	ResetBFS();
 
 	return ret;
@@ -31,21 +32,27 @@ void j1Map::ResetBFS()
 {
 	frontier.Clear();
 	visited.clear();
-	frontier.Push(iPoint(19, 4));
-	visited.add(iPoint(19, 4));
+	frontier.Push(iPoint(1, 4));
+	visited.add(iPoint(1, 4));
 }
 
 void j1Map::PropagateBFS()
 {
 	// TODO 1: If frontier queue contains elements
 	// pop the last one and calculate its 4 neighbors
-
+	
 	iPoint array_[4];
+	iPoint SeenTile;
 	iPoint LastTile;
-	iPoint enemy = {}
+	
+
+	iPoint enemy = {4,5};
 	frontier.Pop(LastTile);
 	for (int i = 0; i < 4; i++) {
+		SeenTile = array_[i];
+		SeenTile = LastTile;
 		array_[i] = LastTile;
+		
 	}
 	array_[0] += {0, -1}; //UP
 	array_[1] += {-1, 0}; //LEFT
@@ -58,11 +65,9 @@ void j1Map::PropagateBFS()
 		if (visited.find(array_[i]) == -1 && IsWalkable(array_[i].x , array_[i].y)) {
 			frontier.Push(array_[i]);
 			visited.add(array_[i]);
+			
 		}	
 	}
-
-
-
 }
 
 void j1Map::DrawBFS()

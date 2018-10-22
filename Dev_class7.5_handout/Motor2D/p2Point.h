@@ -14,6 +14,7 @@ class p2Point
 public:
 
 	TYPE x, y;
+	
 
 	p2Point()
 	{}

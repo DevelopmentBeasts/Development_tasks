@@ -157,6 +157,8 @@ private:
 	/// BFS
 	p2Queue<iPoint>		frontier;
 	p2List<iPoint>		visited;
+
+	
 };
 
 #endif // __j1MAP_H__

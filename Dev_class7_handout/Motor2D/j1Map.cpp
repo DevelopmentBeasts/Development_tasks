@@ -68,8 +68,8 @@ void j1Map::Draw()
 					if (tileset != nullptr) {
 						SDL_Rect r = tileset->GetTileRect(tile_id);
 						iPoint pos = MapToWorld(x, y);
-
-						if (pos.x<(-(App->render->camera.x)+App->render->camera.w+1150)&&pos.x >(-(App->render->camera.x)+0)) {
+						//create a define for App->render->camera.z for better legibility
+						if (pos.x<(-(App->render->camera.x)+App->render->camera.w+1200) && pos.x >(-(App->render->camera.x)-100)) {//
 							App->render->Blit(tileset->texture, pos.x, pos.y, &r);
 						}
 						
