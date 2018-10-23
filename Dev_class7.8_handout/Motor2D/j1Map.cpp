@@ -30,6 +30,7 @@ bool j1Map::Awake(pugi::xml_node& config)
 bool j1Map::Start()
 {
 	tile_x = App->tex->Load("maps/x.png");
+	
 	return true;
 }
 
@@ -48,9 +49,23 @@ void j1Map::Path(int x, int y)
 {
 	path.Clear();
 	iPoint goal = WorldToMap(x, y);
-
+	iPoint curr = goal;
 	// TODO 2: Follow the breadcrumps to goal back to the origin
 	// add each step into "path" dyn array (it will then draw automatically)
+	if (visited.find(goal) != -1) {
+		path.PushBack(curr);
+	
+			while (curr != visited.start->data) {
+				int index = visited.find(curr);
+				curr = breadcrumbs[index];
+				path.PushBack(curr);
+
+			}
+		
+	}
+	
+	
+	
 }
 
 void j1Map::PropagateDijkstra()
@@ -81,6 +96,9 @@ void j1Map::PropagateBFS()
 {
 	// TODO 1: Record the direction to the previous node 
 	// with the new list "breadcrumps"
+
+
+
 	iPoint curr;
 	if (frontier.Pop(curr))
 	{
@@ -89,14 +107,17 @@ void j1Map::PropagateBFS()
 		neighbors[1].create(curr.x + 0, curr.y + 1);
 		neighbors[2].create(curr.x - 1, curr.y + 0);
 		neighbors[3].create(curr.x + 0, curr.y - 1);
-
+		
 		for (uint i = 0; i < 4; ++i)
 		{
+			
 			if (MovementCost(neighbors[i].x, neighbors[i].y) > 0)
 			{
 				if (visited.find(neighbors[i]) == -1)
 				{
 					frontier.Push(neighbors[i], 0);
+					//todo1 here
+					breadcrumbs.add(curr);
 					visited.add(neighbors[i]);
 				}
 			}

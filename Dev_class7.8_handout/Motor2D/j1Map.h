@@ -159,8 +159,11 @@ private:
 
 	/// BFS
 	p2PQueue<iPoint>	frontier;
+	
 	p2List<iPoint>		visited;
+
 	p2List<iPoint>		breadcrumbs;
+	int a;
 	uint				cost_so_far[COST_MAP][COST_MAP];
 	p2DynArray<iPoint>	path;
 	SDL_Texture*		tile_x = nullptr;
