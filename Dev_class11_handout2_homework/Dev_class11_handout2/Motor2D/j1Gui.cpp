@@ -107,6 +107,7 @@ UiElement::UiElement(iPoint position):position(position)
 {}
 
 
+//=====================================================================================================================
 //UI Image
 UiImage::UiImage(iPoint position, SDL_Rect section) : UiElement(position), section(section)
 {
@@ -115,7 +116,7 @@ UiImage::UiImage(iPoint position, SDL_Rect section) : UiElement(position), secti
 
 void UiImage::Draw()
 {
-	App->render->Blit(atlas, position.x, position.y, &section);
+	App->render->Blit(atlas, position.x, position.y, &section, 0.0f);
 }
 
 void UiImage::CleanUp()
@@ -123,6 +124,8 @@ void UiImage::CleanUp()
 	atlas = nullptr;
 }
 
+
+//=====================================================================================================================
 //UI label
 UiLabel::UiLabel(iPoint position, char* label, _TTF_Font* font):UiElement(position), font(font)
 {
@@ -134,8 +137,44 @@ void UiLabel::Draw()
 {
 	SDL_Texture* texture = App->font->Print(text.GetString(), { 255,255,255,255 }, font);
 	
-	App->render->Blit(texture, position.x, position.y);
+	App->render->Blit(texture, position.x, position.y, 0, 0.0f);
 
 	App->tex->UnLoad(texture);
 	texture = nullptr;
+}
+
+//=====================================================================================================================
+//Ui active element
+UiActiveElement::UiActiveElement(iPoint position, char* title):UiElement(position)
+{
+	if (title != nullptr)
+		label = title;
+
+	bt_idle		= { 0,0,0,0 };
+	bt_selected = { 0,0,0,0 };
+
+}
+
+void UiActiveElement::Update()
+{
+
+
+
+}
+
+bool UiActiveElement::MouseOnTop() const
+{
+	bool ret = false;
+
+	iPoint mouse_position;
+	App->input->GetMousePosition(mouse_position.x, mouse_position.y);
+
+	if (mouse_position.x > action_area.x &&
+		mouse_position.x < action_area.x + action_area.w &&
+		mouse_position.y > action_area.y &&
+		mouse_position.y < action_area.y + action_area.h)
+		ret = true;
+	
+
+	return ret;
 }

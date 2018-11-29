@@ -37,6 +37,8 @@ public:
 	void Draw();
 
 	void CleanUp();
+	
+	
 
 private:
 
@@ -71,30 +73,37 @@ class UiActiveElement : public UiElement
 {
 public:
 
-	void Draw();
+	UiActiveElement(iPoint position, char* title=nullptr);
 
-	void Act();
+	void Update();
 
-	void CleanUp();
+	void Draw() {}
+
+	void Act() {}
+
+	void CleanUp() {}
+
+	bool MouseOnTop() const {}
 
 public:
 
 	bool active;
 
 protected:
-	
+
 	//Atlas
 	SDL_Texture* atlas;
 
 	//Sections to draw
+	SDL_Rect bt_idle;
 	SDL_Rect bt_selected;
-	SDL_Rect bt_unselected;
 
 	//Pointer to the section we want to print
 	SDL_Rect* current_bt=nullptr;
 
 	//Text / title we want to print
-	p2SString label;
+	p2SString label_idle;
+	p2SString label_active;
 
 	//Area in which the mouse can activate the element
 	SDL_Rect action_area;
