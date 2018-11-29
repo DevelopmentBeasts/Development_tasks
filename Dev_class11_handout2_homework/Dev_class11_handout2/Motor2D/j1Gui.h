@@ -2,6 +2,8 @@
 #define __j1GUI_H__
 
 #include "j1Module.h"
+#include "j1Fonts.h"
+#include "j1App.h"
 
 #define CURSOR_WIDTH 2
 
@@ -14,16 +16,14 @@ public:
 	//Constructor
 	UiElement(iPoint position);
 
-	~UiElement();
-
 	//Position of the element
 	iPoint position;
 
 	//Print the element on the screen
-	virtual void Draw() const = 0;
+	virtual void Draw() {}
 
 	//CleanUp
-	void CleanUp();
+	void CleanUp() {}
 
 };
 
@@ -34,31 +34,33 @@ public:
 	//Constructor
 	UiImage(iPoint position,SDL_Rect section);
 
-	void Draw() const override;
+	void Draw();
+
+	void CleanUp();
 
 private:
 
 	//Atlas texture
-	const SDL_Texture* atlas;
+	SDL_Texture* atlas;
 
 	//Section we want to draw from the atlas
 	SDL_Rect section;
 
-	
 };
 
 class UiLabel : public UiElement
 {
 public:
 
-	UiLabel(iPoint position, char* label);
+	//Constructors
+	UiLabel(iPoint position, char* label, _TTF_Font* font = App->font->default);
 
-	void Draw() const override;
+	void Draw();
 
 private:
 
 	//Text we want to print
-	p2SString label;
+	p2SString text;
 
 	//Font
 	_TTF_Font* font;
@@ -69,9 +71,9 @@ class UiActiveElement : public UiElement
 {
 public:
 
-	void Draw() const override;
+	void Draw();
 
-	virtual void Act() =0;
+	void Act();
 
 	void CleanUp();
 
@@ -98,7 +100,7 @@ protected:
 	SDL_Rect action_area;
 
 	//Font
-	_TTF_Font* font=nullptr;
+	_TTF_Font* font;
 
 	
 };
@@ -107,9 +109,9 @@ class UiCheckBox : public UiActiveElement
 {
 public:
 
-	void Draw() const override;
+	void Draw();
 
-	void Act() override;
+	void Act() ;
 
 private:
 
@@ -145,11 +147,19 @@ public:
 
 	// TODO 2: Create the factory methods
 	// Gui creation functions
+	UiImage*	AddImage(iPoint position, SDL_Rect section);
+	UiLabel*	AddLabel(iPoint position, char* label, _TTF_Font* font = App->font->default);
 
-	const SDL_Texture* GetAtlas() const;
+	//Call Draw() function of all the UiElements
+	void DrawUi() const;
+
+	SDL_Texture* GetAtlas() const;
 
 private:
 
+	//List with all the UI elements
+	p2List<UiElement*> ui_elements;
+	
 	SDL_Texture* atlas;
 	p2SString atlas_file_name;
 };
