@@ -83,7 +83,7 @@ public:
 
 	void CleanUp() {}
 
-	bool MouseOnTop() const {}
+	bool MouseOnTop() const;
 
 public:
 
@@ -102,8 +102,7 @@ protected:
 	SDL_Rect* current_bt=nullptr;
 
 	//Text / title we want to print
-	p2SString label_idle;
-	p2SString label_active;
+	p2SString label;
 
 	//Area in which the mouse can activate the element
 	SDL_Rect action_area;
