@@ -133,6 +133,7 @@ bool j1Scene::Update(float dt)
 		App->render->Blit(debug_tex, pos.x, pos.y);
 	}
 
+	
 	return true;
 }
 

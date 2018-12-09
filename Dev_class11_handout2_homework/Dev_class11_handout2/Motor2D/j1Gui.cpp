@@ -33,7 +33,7 @@ bool j1Gui::Start()
 	atlas = App->tex->Load(atlas_file_name.GetString());
 
 	AddImage({ 350,50 }, { 485, 829, 328, 103 });
-	AddLabel({350, 20},"Hey kiddos, don't forget to pray to Ric before you go to sleep");
+	AddLabel({350, 20},"Hey kiddos, don't forgeteep");
 
 	return true;
 }
@@ -112,6 +112,7 @@ UiElement::UiElement(iPoint position):position(position)
 UiImage::UiImage(iPoint position, SDL_Rect section) : UiElement(position), section(section)
 {
 	atlas = App->gui->GetAtlas();
+	type = UiType::WINDOW;
 }
 
 void UiImage::Draw()
@@ -130,6 +131,9 @@ void UiImage::CleanUp()
 UiLabel::UiLabel(iPoint position, char* label, _TTF_Font* font):UiElement(position), font(font)
 {
 	text = label;
+
+	type = UiType::LABEL;
+
 }
 
 
@@ -145,20 +149,24 @@ void UiLabel::Draw()
 
 //=====================================================================================================================
 //Ui active element
-UiActiveElement::UiActiveElement(iPoint position, char* title):UiElement(position)
-{
-	if (title != nullptr)
-		label = title;
-
-	bt_idle		= { 0,0,0,0 };
-	bt_selected = { 0,0,0,0 };
-
-}
+UiActiveElement::UiActiveElement(iPoint position):UiElement(position)
+{}
 
 void UiActiveElement::Update()
 {
+	if (MouseOnTop())
+		current_section = &section_selected;
 
+	else
+		current_section = &section_idle;
 
+}
+
+void UiActiveElement::Draw()
+{
+	
+	//Draw the button
+	App->render->Blit(atlas, position.x, position.y, current_section);
 
 }
 

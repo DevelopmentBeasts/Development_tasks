@@ -7,7 +7,17 @@
 
 #define CURSOR_WIDTH 2
 
-// TODO 1: Create your structure of classes
+
+enum class UiType {
+
+	LABEL, 
+	IMAGE, 
+	BUTTON, 
+	CHECKBOX, 
+	INTEXT,
+	WINDOW,
+	NONE
+};
 
 class UiElement
 {
@@ -16,15 +26,22 @@ public:
 	//Constructor
 	UiElement(iPoint position);
 
-	//Position of the element
-	iPoint position;
-
 	//Print the element on the screen
 	virtual void Draw() {}
 
 	//CleanUp
 	void CleanUp() {}
 
+public:
+
+	//Position of the element
+	iPoint position;
+
+	//Type of ui element
+	UiType type;
+
+	//Indicates if an element is visible and we can interact with it
+	bool active;
 };
 
 class UiImage : public UiElement
@@ -73,11 +90,13 @@ class UiActiveElement : public UiElement
 {
 public:
 
-	UiActiveElement(iPoint position, char* title=nullptr);
+	UiActiveElement(iPoint position);
+
+	void Start() {}
 
 	void Update();
 
-	void Draw() {}
+	void Draw();
 
 	void Act() {}
 
@@ -95,21 +114,16 @@ protected:
 	SDL_Texture* atlas;
 
 	//Sections to draw
-	SDL_Rect bt_idle;
-	SDL_Rect bt_selected;
+	SDL_Rect section_idle;
+	SDL_Rect section_selected;
 
 	//Pointer to the section we want to print
-	SDL_Rect* current_bt=nullptr;
-
-	//Text / title we want to print
-	p2SString label;
+	SDL_Rect* current_section =nullptr;
 
 	//Area in which the mouse can activate the element
 	SDL_Rect action_area;
 
-	//Font
-	_TTF_Font* font;
-
+	
 	
 };
 
@@ -126,6 +140,18 @@ private:
 	//Value we want to switch
 	bool* bool_ptr;
 
+};
+
+class UiButton: public UiElement
+{
+
+public:
+
+	
+
+	//Ui label or Ui image, depending on what
+	//   !!!CANT ADD AN ACTIVE ELEMENT OR A WINDOW!!!!
+	UiElement* son_element;
 };
 
 // ---------------------------------------------------
