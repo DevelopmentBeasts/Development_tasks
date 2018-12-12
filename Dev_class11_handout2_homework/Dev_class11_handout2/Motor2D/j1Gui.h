@@ -19,6 +19,12 @@ enum class UiType {
 	NONE
 };
 
+enum class ButtonSize {
+	BIG,
+	SMALL,
+	NONE
+};
+
 class UiElement
 {
 public:
@@ -30,9 +36,12 @@ public:
 	virtual void Draw() {}
 
 	//CleanUp
-	void CleanUp() {}
+	virtual void CleanUp() {}
 
 public:
+
+	//Elemenent to which it this is nested
+	UiElement* parent=nullptr;
 
 	//Position of the element
 	iPoint position;
@@ -74,6 +83,8 @@ public:
 	//Constructors
 	UiLabel(iPoint position, char* label, _TTF_Font* font = App->font->default);
 
+	void CleanUp();
+
 	void Draw();
 
 private:
@@ -92,21 +103,17 @@ public:
 
 	UiActiveElement(iPoint position);
 
-	void Start() {}
+	virtual void Start(){}
 
-	void Update();
+	virtual void Update(){}
 
-	void Draw();
+	void Draw(){}
 
-	void Act() {}
+	virtual void CleanUp() {}
 
-	void CleanUp() {}
+	virtual void Act() {}
 
 	bool MouseOnTop() const;
-
-public:
-
-	bool active;
 
 protected:
 
@@ -123,36 +130,69 @@ protected:
 	//Area in which the mouse can activate the element
 	SDL_Rect action_area;
 
-	
-	
 };
 
-class UiCheckBox : public UiActiveElement
+class UiButton : public UiActiveElement
 {
 public:
 
+	//Constructor
+	UiButton(iPoint position, ButtonSize size, j1Module* callback);
+
+	void Start();
+	void Update();
+
+	void Act();
+
+	//Draw
 	void Draw();
 
-	void Act() ;
-
-private:
-
-	//Value we want to switch
-	bool* bool_ptr;
-
-};
-
-class UiButton: public UiElement
-{
+	UiLabel* NestLabel(iPoint label_position, char* text);
+	UiImage* NestImage(iPoint image_position, SDL_Rect section);
 
 public:
 
-	
+	//Callback to make an action when the button is pressed
+	j1Module* callback=nullptr;
 
 	//Ui label or Ui image, depending on what
 	//   !!!CANT ADD AN ACTIVE ELEMENT OR A WINDOW!!!!
 	UiElement* son_element;
 };
+
+
+class UiCheckBox : public UiActiveElement
+{
+public:
+
+	//Constructor
+	UiCheckBox(iPoint position, bool &boolean, char* label);
+
+	void Start();
+	void Update();
+
+	//Draw
+	void Draw();
+
+	void Act();
+
+
+private:
+
+	//Label
+	UiLabel* label;
+
+	//Tick
+	UiImage* tick;
+
+	//Text to put into the label
+	char* label_text;
+
+	//Value we want to switch
+	bool &bool_ptr;
+
+};
+
 
 // ---------------------------------------------------
 class j1Gui : public j1Module
@@ -179,10 +219,11 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	// TODO 2: Create the factory methods
 	// Gui creation functions
 	UiImage*	AddImage(iPoint position, SDL_Rect section);
 	UiLabel*	AddLabel(iPoint position, char* label, _TTF_Font* font = App->font->default);
+	UiButton*	AddButton(iPoint position, ButtonSize size, j1Module* callback = nullptr);
+	UiCheckBox*	AddCheckBox(iPoint position, bool * boolean, char* label);
 
 	//Call Draw() function of all the UiElements
 	void DrawUi() const;
@@ -193,6 +234,9 @@ private:
 
 	//List with all the UI elements
 	p2List<UiElement*> ui_elements;
+
+	//List with all the elements we can interact with
+	p2List<UiActiveElement*> active_elements;
 	
 	SDL_Texture* atlas;
 	p2SString atlas_file_name;

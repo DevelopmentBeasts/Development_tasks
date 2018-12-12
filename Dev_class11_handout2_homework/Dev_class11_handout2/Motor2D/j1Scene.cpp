@@ -132,8 +132,9 @@ bool j1Scene::Update(float dt)
 		iPoint pos = App->map->MapToWorld(path->At(i)->x, path->At(i)->y);
 		App->render->Blit(debug_tex, pos.x, pos.y);
 	}
-
 	
+	
+
 	return true;
 }
 
@@ -154,4 +155,10 @@ bool j1Scene::CleanUp()
 	LOG("Freeing scene");
 
 	return true;
+}
+
+void j1Scene::ButtonAction(UiButton* button)
+{
+	//button->active = false;
+	ShellExecuteA(NULL, "open", "https://www.youtube.com/watch?v=7SRAIIkYyAo ", NULL, NULL, SW_SHOWNORMAL);
 }

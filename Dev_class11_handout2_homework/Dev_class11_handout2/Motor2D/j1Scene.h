@@ -34,7 +34,11 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+
+	void ButtonAction(UiButton* button);
 private:
+	bool lmao = true;
+
 	SDL_Texture* debug_tex;
 	GuiImage* banner;
 	GuiText* text;
